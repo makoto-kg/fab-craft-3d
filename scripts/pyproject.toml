@@ -1,0 +1,9 @@
+[project]
+name = "virtual-fab-scripts"
+version = "0.1.0"
+description = "GLB model generation scripts for Virtual Fab"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "trimesh",
+]

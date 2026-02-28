@@ -557,7 +557,7 @@ export const FabCanvas = forwardRef<FabCanvasHandle, FabCanvasProps>(
 
       // ── Cleanroom lighting ─────────────────────────────────────────────────
       // Ambient fill — cleanroom illumination boosted for visibility
-      scene.add(new THREE.AmbientLight(0x4a6070, 5.5));
+      scene.add(new THREE.AmbientLight(0x4a6070, 6.5));
 
       // Directional key light for shadow definition on equipment
       const keyLight = new THREE.DirectionalLight(0x9ab8cc, 1.0);
