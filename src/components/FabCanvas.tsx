@@ -526,6 +526,8 @@ export const FabCanvas = forwardRef<FabCanvasHandle, FabCanvasProps>(
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 0.9;
       renderer.setClearColor(0x0d0d1f);
       renderer.setSize(div.clientWidth, div.clientHeight);
       div.appendChild(renderer.domElement);
@@ -555,13 +557,26 @@ export const FabCanvas = forwardRef<FabCanvasHandle, FabCanvasProps>(
       controls.update();
       controlsRef.current = controls;
 
-      // ── Cleanroom lighting ─────────────────────────────────────────────────
-      // Ambient fill — cleanroom illumination boosted for visibility
-      scene.add(new THREE.AmbientLight(0x4a6070, 6.5));
+      // ── Environment map (for metallic PBR reflections) ───────────────────
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      const envScene = new THREE.Scene();
+      // envScene.add(new THREE.AmbientLight(0xd8eeff, 2.0));
+      envScene.add(new THREE.AmbientLight(0xf0f0f0, 2.0));
+      const envDir = new THREE.DirectionalLight(0xffffff, 1.5);
+      envDir.position.set(1, 3, 2);
+      envScene.add(envDir);
+      envScene.background = new THREE.Color(0x202838);
+      scene.environment = pmrem.fromScene(envScene, 0.04).texture;
+      pmrem.dispose();
 
-      // Directional key light for shadow definition on equipment
-      const keyLight = new THREE.DirectionalLight(0x9ab8cc, 1.0);
-      keyLight.position.set(0, 20, 0);
+      // ── Cleanroom lighting ─────────────────────────────────────────────────
+      // Ambient fill — subtle cool white; kept low so directional shadows read clearly
+      // scene.add(new THREE.AmbientLight(0xd8e4f0, 0.6));
+      scene.add(new THREE.AmbientLight(0xf0f0f0, 0.6));
+
+      // Directional key light — angled for clear shadow definition
+      const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+      keyLight.position.set(10, 20, 8);
       keyLight.castShadow = true;
       keyLight.shadow.camera.left   = -60; keyLight.shadow.camera.right  =  60;
       keyLight.shadow.camera.top    =  60; keyLight.shadow.camera.bottom = -60;

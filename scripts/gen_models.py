@@ -35,7 +35,7 @@ def _rgb(h: str):
     return [int(h[i : i + 2], 16) / 255.0 for i in (0, 2, 4)]
 
 
-def pbr(color: str, metallic: float = 0.82, rough: float = 0.28):
+def pbr(color: str, metallic: float = 0.55, rough: float = 0.28):
     """
     PBR material.
     Defaults → brushed stainless steel / anodised aluminium finish.
@@ -150,37 +150,37 @@ def _foup(px: float, py: float, pz: float,
 
     # ── Shell (warm brown) ───────────────────────────────────────
     parts.append(bx(FD, fh, fw,
-                    px, py, pz, "#8b6538", mt=0.05, ro=0.60))
+                    px, py, pz, C_FOUP_SHELL, mt=0.05, ro=0.60))
 
     # ── Front door (slightly darker brown panel, face_sgn side) ──
     door_x = px + face_sgn * (FD / 2 + 0.005)
     parts.append(bx(0.012, fh * 0.86, fw * 0.82,
-                    door_x, py, pz, "#7a5830", mt=0.05, ro=0.55))
+                    door_x, py, pz, C_FOUP_DOOR, mt=0.05, ro=0.55))
 
     # ── Door recess frame (thin dark border) ─────────────────────
     parts.append(bx(0.006, fh * 0.90, fw * 0.88,
                     door_x - face_sgn * 0.004, py, pz,
-                    "#5a4020", mt=0.55, ro=0.40))
+                    C_FOUP_RECESS, mt=0.55, ro=0.40))
 
     # ── Top handle bar ────────────────────────────────────────────
     parts.append(bx(FD * 0.32, 0.048, fw * 0.50,
                     px, py + fh / 2 + 0.024, pz,
-                    "#3a4a5a", mt=0.85, ro=0.28))
+                    C_FOUP_HANDLE, mt=0.85, ro=0.28))
     # Handle mounting stubs
     for sz in (-fw * 0.14, fw * 0.14):
         parts.append(bx(FD * 0.10, 0.030, 0.018,
                         px, py + fh / 2 + 0.005, pz + sz,
-                        "#3a4a5a", mt=0.85, ro=0.28))
+                        C_FOUP_HANDLE, mt=0.85, ro=0.28))
 
     # ── White label area on door ──────────────────────────────────
     parts.append(bx(0.007, fh * 0.22, fw * 0.44,
                     door_x + face_sgn * 0.004, py + fh * 0.10, pz,
-                    "#f5f5f5", mt=0.02, ro=0.80))
+                    C_FOUP_LABEL, mt=0.02, ro=0.80))
 
     # ── Latch indicator dot (green = loaded/ready) ────────────────
     parts.append(bx(0.007, 0.030, 0.030,
                     door_x + face_sgn * 0.004, py - fh * 0.28, pz,
-                    "#22c55e", mt=0.02, ro=0.40))
+                    C_LED_GREEN, mt=0.02, ro=0.40))
 
     return parts
 
@@ -213,6 +213,117 @@ _VPT = dict(mt=0.05, ro=0.04)   # viewport glass
 _LED = dict(mt=0.02, ro=0.45)   # indicator LED / signal light (coloured plastic)
 _SCR = dict(mt=0.02, ro=0.80)   # display screen
 
+# ─── Colour constants ────────────────────────────────────────────────────────
+
+# Common colours (shared across all models)
+C_BODY       = "#fafbfd"   # main frame / body panels
+# C_BODY       = "#ffffff"   # main frame / body panels
+C_TRIM       = "#d0d4d8"   # cable trays, signal-tower pole
+C_PANEL_LINE = "#c8cdd2"   # decorative panel lines
+C_DARK       = "#263238"   # vacuum pumps, chillers
+C_DARK_VENT  = "#1a202c"   # chiller vents
+C_STEEL_DARK = "#37474f"   # top lids
+C_STEEL_MID  = "#546e7a"   # ribs, arms
+C_STEEL      = "#607d8b"   # leveling feet
+C_STEEL_LT   = "#78909c"   # granite, glass posts
+C_STEEL_PALE = "#90a4ae"   # wafer chuck
+C_ROBOT      = "#d8dde2"   # ATM robot
+C_LAMP_OFF   = "#1a1a1a"   # signal-tower lamp (OFF / dynamic override)
+C_LED_GREEN  = "#22c55e"   # status LED
+C_SCREEN     = "#1565c0"   # display screen face
+
+# Load-port / FOUP colours
+C_LP_FRAME   = "#2d3748"   # LP port frame
+C_LP_COLUMN  = "#dde4ec"   # vertical column
+C_LP_TABLE   = "#c8d8e8"   # table top slab
+C_FOUP_SHELL = "#8b6538"   # FOUP shell (warm brown)
+C_FOUP_DOOR  = "#7a5830"   # FOUP door
+C_FOUP_RECESS= "#5a4020"   # door recess frame
+C_FOUP_HANDLE= "#3a4a5a"   # handle bar
+C_FOUP_LABEL = "#f5f5f5"   # label area
+
+# EUV theme
+C_EUV_WINDOW = "#0d47a1"   # CO₂ laser output window
+
+# CVD theme (green)
+C_CVD_PRI    = "#2e7d32"   # primary green (top caps)
+C_CVD_DARK   = "#1b5e20"   # dark green (domes, vacuum)
+C_CVD_LIGHT  = "#a5d6a7"   # light green (viewport)
+C_CVD_ACCENT = "#388e3c"   # accent green (pipes, turbo exhaust)
+
+# CMP theme (orange)
+C_CMP_TOP    = "#e64a19"   # main frame top
+C_CMP_TOP2   = "#bf360c"   # cleaning module top
+C_CMP_PLATEN = "#6d2813"   # platen disk
+C_CMP_PAD    = "#8d3b14"   # polishing pad
+C_CMP_PRI    = "#a04000"   # primary orange (arms, carousel)
+C_CMP_DARK   = "#7b3500"   # dark orange (conditioning disk, carousel)
+C_CMP_NOZZLE = "#bf4500"   # slurry nozzle arm
+C_CMP_NZTIP  = "#d4500c"   # nozzle tip
+C_CMP_ARM    = "#5a1505"   # touchscreen arm
+C_CMP_FRAME  = "#3d1505"   # touchscreen frame
+
+# ETCH theme (red)
+C_ETCH_PRI   = "#991b1b"   # primary red (top cap, gas lines)
+C_ETCH_DARK  = "#7f1d1d"   # dark red (chamber tops, gate valves)
+C_ETCH_DEEP  = "#5a1010"   # deep red (ICP domes)
+C_ETCH_CABLE = "#6b1515"   # RF cable
+C_ETCH_VP    = "#fca5a5"   # viewport (light red)
+
+# SEM theme (purple)
+C_SEM_PRI    = "#6a1fc2"   # primary purple (top, isolators)
+C_SEM_DARK   = "#4a148c"   # dark purple (desk top, turbo pump)
+C_SEM_GUN    = "#381371"   # electron gun
+C_SEM_DEEP   = "#1e0840"   # gun tip, air-lock
+C_SEM_LIGHT  = "#8b5cf6"   # aperture disc
+C_SEM_FRAME  = "#1e1b4b"   # monitor frame, keyboard
+C_SEM_SCREEN = "#312e81"   # monitor screen
+
+
+# ─── Common sub-assembly helpers ─────────────────────────────────────────────
+
+def _load_port(foup_x, z, face_sgn, fh=0.38, col_w=0.13, table_w=0.50):
+    """
+    Load-port assembly: port frame + pedestal column + table slab + LED + FOUP.
+
+    foup_x   : X centre of the FOUP
+    z        : Z centre of the load port
+    face_sgn : +1 → FOUP door faces +X,  -1 → FOUP door faces -X
+    fh       : FOUP height (m)
+    col_w    : column width (X extent)
+    table_w  : table slab width (X extent)
+    """
+    wall_x = foup_x - face_sgn * 0.128
+    led_x  = foup_x + face_sgn * 0.060
+    parts = []
+    parts.append(bx(0.015, 0.44, 0.44, wall_x, 1.28, z, C_LP_FRAME, mt=0.70, ro=0.30))
+    parts.append(bx(col_w, 1.02, 0.44, foup_x, 0.51, z, C_LP_COLUMN, mt=0.58, ro=0.40))
+    parts.append(bx(table_w, 0.08, 0.46, foup_x, 1.05, z, C_LP_TABLE, mt=0.62, ro=0.28))
+    parts.append(cy(0.030, 0.04, led_x, 0.86, z, C_LED_GREEN, segs=8, axis="z", **_LED))
+    parts += _foup(foup_x, 1.28, z, face_sgn, fh)
+    return parts
+
+
+def _signal_tower(x, z, pole_y, pole_h, y_green,
+                  pole_r=0.05, lamp_r=0.08, lamp_h=0.12):
+    """
+    Signal tower: pole + 3 lamps (green / yellow / red, bottom to top).
+
+    x, z     : horizontal position
+    pole_y   : Y centre of the pole cylinder
+    pole_h   : pole height
+    y_green  : Y centre of the bottom (green) lamp
+    pole_r   : pole radius
+    lamp_r   : lamp radius
+    lamp_h   : lamp height
+    """
+    parts = []
+    parts.append(cy(pole_r, pole_h, x, pole_y, z, C_TRIM, segs=8, **_BRS))
+    parts.append(cy(lamp_r, lamp_h, x, y_green,       z, C_LAMP_OFF, segs=8, **_LED))
+    parts.append(cy(lamp_r, lamp_h, x, y_green + 0.15, z, C_LAMP_OFF, segs=8, **_LED))
+    parts.append(cy(lamp_r, lamp_h, x, y_green + 0.30, z, C_LAMP_OFF, segs=8, **_LED))
+    return parts
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 #  EUV Lithography (ASML NXE-style)
@@ -224,107 +335,96 @@ def make_euv():
     H = 2.4   # main frame height
 
     # ── Main frame ──────────────────────────────────────────────
-    p.append(bx(8.5, H, 3.4,    -1,   H/2,  0,     "#fafbfd", **_BRS))
+    p.append(bx(8.5, H, 3.4,    -1,   H/2,  0,     C_BODY, **_BRS))
     # Panel lines (thin decorative strips)
-    p.append(bx(8.5, 0.05, 0.02, -1, H*0.7,  1.65, "#c8cdd2", **_BRS))
-    p.append(bx(8.5, 0.05, 0.02, -1, H*0.7, -1.65, "#c8cdd2", **_BRS))
+    p.append(bx(8.5, 0.05, 0.02, -1, H*0.7,  1.65, C_PANEL_LINE, **_BRS))
+    p.append(bx(8.5, 0.05, 0.02, -1, H*0.7, -1.65, C_PANEL_LINE, **_BRS))
 
     # ── LPS (Light Source Pod) ───────────────────────────────────
-    p.append(bx(3.8, 2.6, 3.0,  -6.5, 1.30,  0,    "#fafbfd", **_BRS))
-    p.append(bx(3.8, 0.15,3.0,  -6.5, 2.68,  0,    "#37474f", **_BRS))   # top lid — keep EUV color
+    p.append(bx(3.8, 2.6, 3.0,  -6.5, 1.30,  0,    C_BODY, **_BRS))
+    p.append(bx(3.8, 0.15,3.0,  -6.5, 2.68,  0,    C_STEEL_DARK, **_BRS))   # top lid
     # CO₂ laser output window
-    p.append(bx(0.05,0.42,0.42, -4.60,1.60,  0,    "#0d47a1", **_VPT))
+    p.append(bx(0.05,0.42,0.42, -4.60,1.60,  0,    C_EUV_WINDOW, **_VPT))
     # Beam duct  (horizontal box, X-direction)
-    p.append(bx(1.0, 0.50,0.50, -4.0, 1.60,  0,    "#fafbfd", **_BRS))
+    p.append(bx(1.0, 0.50,0.50, -4.0, 1.60,  0,    C_BODY, **_BRS))
     # Tin nozzle  (horizontal cylinder along X)
-    p.append(cy(0.08,0.85, -5.2, 1.60,  0,   "#546e7a", segs=8,  axis="x", **_POL))
+    p.append(cy(0.08,0.85, -5.2, 1.60,  0,   C_STEEL_MID, segs=8,  axis="x", **_POL))
     # LPS leveling feet
     for fx, fz in [(-5.8,-1.3),(-7.2,-1.3),(-5.8,1.3),(-7.2,1.3)]:
-        p.append(cy(0.12, 0.07,  fx, 0.035, fz, "#607d8b", segs=8, **_BRS))
+        p.append(cy(0.12, 0.07,  fx, 0.035, fz, C_STEEL, segs=8, **_BRS))
 
     # ── Illumination column ──────────────────────────────────────
-    p.append(bx(0.8, 1.4, 0.8, -2.5, H+0.70,  0,  "#fafbfd", **_BRS))
-    p.append(cy(0.35,0.90, -2.5, H+1.65, 0,        "#fafbfd", segs=20, **_BRS))
+    p.append(bx(0.8, 1.4, 0.8, -2.5, H+0.70,  0,  C_BODY, **_BRS))
+    p.append(cy(0.35,0.90, -2.5, H+1.65, 0,        C_BODY, segs=20, **_BRS))
 
     # ── Projection Optics Box (POB) ──────────────────────────────
-    p.append(bx(2.8, 2.0, 2.6,  0.5, H+1.00,  0,  "#fafbfd", **_BRS))
-    p.append(cy(0.60,1.80,  0.5, H+0.90,  0,       "#fafbfd", segs=24, **_BRS))  # mirror housing
-    p.append(bx(1.0, 0.50,1.0,  0.5, H+2.20,  0,  "#37474f", **_BRS))  # top slab — keep EUV color
+    p.append(bx(2.8, 2.0, 2.6,  0.5, H+1.00,  0,  C_BODY, **_BRS))
+    p.append(cy(0.60,1.80,  0.5, H+0.90,  0,       C_BODY, segs=24, **_BRS))  # mirror housing
+    p.append(bx(1.0, 0.50,1.0,  0.5, H+2.20,  0,  C_STEEL_DARK, **_BRS))  # top slab
     # Ribs
     for rz in [-0.9, 0.0, 0.9]:
-        p.append(bx(0.10,0.30,0.10, 0.5, H+2.00, rz, "#546e7a", **_BRS))
+        p.append(bx(0.10,0.30,0.10, 0.5, H+2.00, rz, C_STEEL_MID, **_BRS))
 
     # ── Reticle Stage ────────────────────────────────────────────
-    p.append(bx(3.4, 0.70,2.8,  0.4, H+2.65,  0,  "#fafbfd", **_BRS))
-    p.append(bx(1.8, 0.12,1.6,  0.4, H+3.02,  0,  "#546e7a", **_POL))  # clamp
-    p.append(bx(0.15,0.15,1.8,  0.4, H+2.95,  0,  "#607d8b", **_POL))  # handler arm
+    p.append(bx(3.4, 0.70,2.8,  0.4, H+2.65,  0,  C_BODY, **_BRS))
+    p.append(bx(1.8, 0.12,1.6,  0.4, H+3.02,  0,  C_STEEL_MID, **_POL))  # clamp
+    p.append(bx(0.15,0.15,1.8,  0.4, H+2.95,  0,  C_STEEL, **_POL))  # handler arm
     # Reticle library (SMIF pod)
-    p.append(bx(1.4, 1.80,1.4,  2.2, H+2.20, 0.8, "#fafbfd", **_BRS))
-    p.append(bx(0.05,1.40,1.2,  2.95,H+2.20, 0.8, "#d0d4d8", **_BRS))
+    p.append(bx(1.4, 1.80,1.4,  2.2, H+2.20, 0.8, C_BODY, **_BRS))
+    p.append(bx(0.05,1.40,1.2,  2.95,H+2.20, 0.8, C_TRIM, **_BRS))
 
     # ── Wafer Stage ──────────────────────────────────────────────
-    p.append(bx(4.2, 1.60,3.4,  4.0, 0.80,   0,   "#fafbfd", **_BRS))
-    p.append(bx(2.4, 0.18,2.4,  4.0, 1.69,   0,   "#78909c", **_POL))  # granite platform
-    p.append(cy(0.16,0.05,  4.0, 1.78,  0,         "#90a4ae", segs=32, **_POL))  # wafer chuck
+    p.append(bx(4.2, 1.60,3.4,  4.0, 0.80,   0,   C_BODY, **_BRS))
+    p.append(bx(2.4, 0.18,2.4,  4.0, 1.69,   0,   C_STEEL_LT, **_POL))  # granite platform
+    p.append(cy(0.16,0.05,  4.0, 1.78,  0,         C_STEEL_PALE, segs=32, **_POL))  # wafer chuck
     # Interferometer blocks
     for ox, oz in [(-1,1),(1,1),(1,-1),(-1,-1)]:
-        p.append(bx(0.12,0.12,0.12, 4.0+ox, 1.85, oz, "#546e7a", **_POL))
+        p.append(bx(0.12,0.12,0.12, 4.0+ox, 1.85, oz, C_STEEL_MID, **_POL))
     # Linear motor rails
     for rx_,rz_ in [(3.0,-1.4),(5.0,-1.4),(3.0,1.4),(5.0,1.4)]:
-        p.append(bx(0.15,0.15,3.2, rx_, 1.68, rz_, "#fafbfd", **_BRS))
+        p.append(bx(0.15,0.15,3.2, rx_, 1.68, rz_, C_BODY, **_BRS))
 
     # ── EFEM ─────────────────────────────────────────────────────
-    p.append(bx(2.6, 2.2, 3.4,  6.9,  1.10,  0,   "#fafbfd", **_BRS))
-    p.append(bx(1.8, 1.0, 1.8,  6.9,  0.80, 0.2,  "#fafbfd", **_BRS))   # robot housing
+    p.append(bx(2.6, 2.2, 3.4,  6.9,  1.10,  0,   C_BODY, **_BRS))
+    p.append(bx(1.8, 1.0, 1.8,  6.9,  0.80, 0.2,  C_BODY, **_BRS))   # robot housing
     # ATM robot
-    p.append(cy(0.18,0.80,  6.9,  0.60,  0,        "#d8dde2", segs=12, **_BRS))
-    p.append(bx(0.60,0.06,0.08, 7.2, 0.90,  0,    "#546e7a", **_POL))
-    p.append(bx(0.40,0.06,0.08, 7.6, 0.90,  0,    "#607d8b", **_POL))
-    p.append(cy(0.14,0.03,  7.9, 0.90,  0,         "#78909c", segs=16, **_POL))
-    # FOUP load ports ×3  (台 / table-pedestal style, door flush against EFEM wall)
-    # EFEM wall face at x=8.20; FD=0.26, door offset=0.135 → FOUP centre px=8.335
-    # SEMI E47.1: width=0.40 m (Z), depth=0.26 m (X), height=0.38 m
+    p.append(cy(0.18,0.80,  6.9,  0.60,  0,        C_ROBOT, segs=12, **_BRS))
+    p.append(bx(0.60,0.06,0.08, 7.2, 0.90,  0,    C_STEEL_MID, **_POL))
+    p.append(bx(0.40,0.06,0.08, 7.6, 0.90,  0,    C_STEEL, **_POL))
+    p.append(cy(0.14,0.03,  7.9, 0.90,  0,         C_STEEL_LT, segs=16, **_POL))
+    # FOUP load ports ×3
     for z_lp in [-1.0, 0.0, 1.0]:
-        p.append(bx(0.015, 0.44, 0.44, 8.207, 1.28, z_lp, "#2d3748", mt=0.70, ro=0.30))  # LP port frame on EFEM wall
-        p.append(bx(0.15, 1.02, 0.44, 8.335, 0.51, z_lp, "#dde4ec", mt=0.58, ro=0.40))   # vertical column
-        p.append(bx(0.52, 0.08, 0.46, 8.335, 1.05, z_lp, "#c8d8e8", mt=0.62, ro=0.28))   # table top slab
-        p.append(cy(0.030, 0.04, 8.395, 0.86, z_lp, "#22c55e", segs=8, axis="z", **_LED)) # status LED
-        p += _foup(8.335, 1.28, z_lp, -1, 0.38)  # FOUP door flush with EFEM wall
+        p += _load_port(8.335, z_lp, -1, col_w=0.15, table_w=0.52)
 
     # ── Vacuum pumps × 4 (rear) ──────────────────────────────────
     for vx in [-5.0, -2.5, 0.0, 2.5]:
-        p.append(cy(0.28, 1.40, vx, 0.70, -2.20,      "#263238", segs=12, **_BRS))
-        p.append(cy(0.18, 0.28, vx, 1.54, -2.20,      "#37474f", segs=12, **_POL))
+        p.append(cy(0.28, 1.40, vx, 0.70, -2.20,      C_DARK, segs=12, **_BRS))
+        p.append(cy(0.18, 0.28, vx, 1.54, -2.20,      C_STEEL_DARK, segs=12, **_POL))
 
     # ── Chillers (rear) ──────────────────────────────────────────
     for cx in [1.0, 3.5]:
-        p.append(bx(1.8, 1.90, 0.90, cx, 0.95, -2.30, "#263238", **_BRS))
+        p.append(bx(1.8, 1.90, 0.90, cx, 0.95, -2.30, C_DARK, **_BRS))
         for i in range(5):
-            p.append(bx(1.6, 0.04, 0.02, cx, 0.30+i*0.32, -1.88, "#1a202c", **_ANO))
+            p.append(bx(1.6, 0.04, 0.02, cx, 0.30+i*0.32, -1.88, C_DARK_VENT, **_ANO))
 
     # ── Gas cabinet ──────────────────────────────────────────────
-    p.append(bx(0.9, 2.30, 0.9, -6.2,  1.15, -1.4,   "#fafbfd", **_BRS))
+    p.append(bx(0.9, 2.30, 0.9, -6.2,  1.15, -1.4,   C_BODY, **_BRS))
 
     # ── Control rack ─────────────────────────────────────────────
-    p.append(bx(0.85,2.20,0.9,  8.0,  1.10, -1.35,   "#fafbfd", **_BRS))
+    p.append(bx(0.85,2.20,0.9,  8.0,  1.10, -1.35,   C_BODY, **_BRS))
     for i in range(5):
-        p.append(bx(0.72,0.16,0.02, 8.0, 0.28+i*0.4, -0.92, "#1565c0", **_SCR))
+        p.append(bx(0.72,0.16,0.02, 8.0, 0.28+i*0.4, -0.92, C_SCREEN, **_SCR))
 
     # ── Cable trays ──────────────────────────────────────────────
-    p.append(bx(10.0,0.14,0.36, -1.0, H+0.07,  1.60, "#d0d4d8", **_BRS))
-    p.append(bx(10.0,0.14,0.36, -1.0, H+0.07, -1.60, "#d0d4d8", **_BRS))
+    p.append(bx(10.0,0.14,0.36, -1.0, H+0.07,  1.60, C_TRIM, **_BRS))
+    p.append(bx(10.0,0.14,0.36, -1.0, H+0.07, -1.60, C_TRIM, **_BRS))
 
     # ── Signal tower light ───────────────────────────────────────
-    # top=red(H+1.08), mid=yellow(H+0.93), bottom=green(H+0.78)
-    # Lamp colors set to dark "#1a1a1a" — Three.js dynamic lamps overlay these.
-    p.append(cy(0.05, 0.70, 6.5, H+0.35, 1.5,        "#d0d4d8", segs=8, **_BRS))
-    p.append(cy(0.08, 0.12, 6.5, H+0.78, 1.5,        "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.08, 0.12, 6.5, H+0.93, 1.5,        "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.08, 0.12, 6.5, H+1.08, 1.5,        "#1a1a1a", segs=8, **_LED))
+    p += _signal_tower(6.5, 1.5, H+0.35, 0.70, H+0.78)
 
     # ── Leveling pads ─────────────────────────────────────────────
     for px, pz in [(-6,-1.5),(-6,1.5),(-1,-1.7),(-1,1.7),(4,-1.7),(4,1.7),(7.5,-1.5),(7.5,1.5)]:
-        p.append(cy(0.14, 0.06, px, 0.03, pz,         "#546e7a", segs=8, **_POL))
+        p.append(cy(0.14, 0.06, px, 0.03, pz,         C_STEEL_MID, segs=8, **_POL))
 
     return build_scene(p)
 
@@ -337,54 +437,46 @@ def make_cvd():
     p = []
 
     # ── Central transfer chamber (hexagonal) ─────────────────────
-    p.append(cy(1.15, 1.70, 0, 0.85, 0,  "#fafbfd", segs=6, **_BRS))
-    p.append(cy(1.25, 0.18, 0, 1.76, 0,  "#2e7d32", segs=6, **_POL))  # top cap — keep green
-    p.append(cy(1.25, 0.12, 0, 0.05, 0,  "#fafbfd", segs=6, **_BRS))
+    p.append(cy(1.15, 1.70, 0, 0.85, 0,  C_BODY, segs=6, **_BRS))
+    p.append(cy(1.25, 0.18, 0, 1.76, 0,  C_CVD_PRI, segs=6, **_POL))  # top cap
+    p.append(cy(1.25, 0.12, 0, 0.05, 0,  C_BODY, segs=6, **_BRS))
 
     # ── 4 Process chambers ───────────────────────────────────────
     for px, pz in [(1.9,0.8),(1.9,-0.8),(-1.9,0.8),(-1.9,-0.8)]:
-        p.append(bx(1.3,1.6,1.3, px,  0.80, pz, "#fafbfd", **_BRS))
-        p.append(bx(1.4,0.18,1.4,px,  1.67, pz, "#2e7d32", **_POL))  # top — keep green
-        p.append(cy(0.55,0.40, px, 1.85, pz,    "#1b5e20", segs=20, **_POL))  # dome — keep green
+        p.append(bx(1.3,1.6,1.3, px,  0.80, pz, C_BODY, **_BRS))
+        p.append(bx(1.4,0.18,1.4,px,  1.67, pz, C_CVD_PRI, **_POL))  # top
+        p.append(cy(0.55,0.40, px, 1.85, pz,    C_CVD_DARK, segs=20, **_POL))  # dome
         # RF matching unit
         side = 0.88 if px > 0 else -0.88
-        p.append(bx(0.40,0.42,0.40, px+side, 0.60, pz, "#fafbfd", **_BRS))
+        p.append(bx(0.40,0.42,0.40, px+side, 0.60, pz, C_BODY, **_BRS))
         # Viewport
         vz = pz + (0.67 if pz > 0 else -0.67)
-        p.append(cy(0.09,0.06, px, 0.95, vz,    "#a5d6a7", segs=12, axis="z", **_VPT))
+        p.append(cy(0.09,0.06, px, 0.95, vz,    C_CVD_LIGHT, segs=12, axis="z", **_VPT))
         # Gate valve connector to center
-        p.append(bx(0.25,0.30,0.25, px*0.5, 0.80, pz*0.5, "#fafbfd", **_BRS))
+        p.append(bx(0.25,0.30,0.25, px*0.5, 0.80, pz*0.5, C_BODY, **_BRS))
         # Turbo pump exhaust
         ex_side = 0.62 if pz > 0 else -0.62
-        p.append(cy(0.07,0.60, px, 0.20, pz+ex_side, "#388e3c", segs=8, axis="z", **_BRS))
+        p.append(cy(0.07,0.60, px, 0.20, pz+ex_side, C_CVD_ACCENT, segs=8, axis="z", **_BRS))
 
     # ── EFEM ─────────────────────────────────────────────────────
-    p.append(bx(1.6,2.0,3.0, 2.8, 1.0, 0,  "#fafbfd", **_BRS))
-    p.append(bx(1.7,0.16,3.1,2.8, 2.08,0,  "#2e7d32", **_POL))  # top — keep green
-    # EFEM wall face at x=3.60; FD=0.26, door offset=0.135 → FOUP centre px=3.735
+    p.append(bx(1.6,2.0,3.0, 2.8, 1.0, 0,  C_BODY, **_BRS))
+    p.append(bx(1.7,0.16,3.1,2.8, 2.08,0,  C_CVD_PRI, **_POL))  # top
+    # FOUP load ports ×2
     for z_lp in [-1.0, 1.0]:
-        p.append(bx(0.015, 0.44, 0.44, 3.607, 1.28, z_lp, "#2d3748", mt=0.70, ro=0.30))  # LP port frame on EFEM wall
-        p.append(bx(0.13, 1.02, 0.44, 3.735, 0.51, z_lp, "#dde4ec", mt=0.58, ro=0.40))   # vertical column
-        p.append(bx(0.50, 0.08, 0.46, 3.735, 1.05, z_lp, "#c8d8e8", mt=0.62, ro=0.28))   # table top slab
-        p.append(cy(0.030, 0.04, 3.795, 0.86, z_lp, "#22c55e", segs=8, axis="z", **_LED)) # status LED
-        p += _foup(3.735, 1.28, z_lp, -1, 0.38)  # FOUP door flush with EFEM wall
+        p += _load_port(3.735, z_lp, -1)
 
     # ── Gas cabinet ──────────────────────────────────────────────
-    p.append(bx(0.85,2.2,1.1, -2.5, 1.1, 0.7,  "#fafbfd", **_BRS))
+    p.append(bx(0.85,2.2,1.1, -2.5, 1.1, 0.7,  C_BODY, **_BRS))
     for i in range(4):
-        p.append(cy(0.03,1.1, -2.1, 1.15+i*0.18, -0.15, "#388e3c", segs=8, axis="z", **_BRS))
+        p.append(cy(0.03,1.1, -2.1, 1.15+i*0.18, -0.15, C_CVD_ACCENT, segs=8, axis="z", **_BRS))
 
     # ── Vacuum system ─────────────────────────────────────────────
-    p.append(bx(1.1,1.6,2.8, -2.5, 0.8, -0.8, "#fafbfd", **_BRS))
-    p.append(cy(0.28,1.0, -2.5, 0.5, -0.9,    "#1b5e20", segs=12, **_BRS))
-    p.append(cy(0.28,1.0, -2.5, 0.5,  0.3,    "#1b5e20", segs=12, **_BRS))
+    p.append(bx(1.1,1.6,2.8, -2.5, 0.8, -0.8, C_BODY, **_BRS))
+    p.append(cy(0.28,1.0, -2.5, 0.5, -0.9,    C_CVD_DARK, segs=12, **_BRS))
+    p.append(cy(0.28,1.0, -2.5, 0.5,  0.3,    C_CVD_DARK, segs=12, **_BRS))
 
     # ── Signal tower ─────────────────────────────────────────────
-    # top=red(2.88), mid=yellow(2.73), bottom=green(2.58); lamps dark for dynamic override
-    p.append(cy(0.05,0.90, 0, 2.30, 0, "#d0d4d8", segs=8, **_BRS))
-    p.append(cy(0.08,0.12, 0, 2.58, 0, "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.08,0.12, 0, 2.73, 0, "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.08,0.12, 0, 2.88, 0, "#1a1a1a", segs=8, **_LED))
+    p += _signal_tower(0, 0, 2.30, 0.90, 2.58)
 
     return build_scene(p)
 
@@ -397,54 +489,48 @@ def make_cmp():
     p = []
 
     # ── Main frame ───────────────────────────────────────────────
-    p.append(bx(4.8,1.65,3.0, 0, 0.825, 0, "#fafbfd", **_BRS))
-    p.append(bx(4.8,0.16, 3.0, 0, 1.73,  0, "#e64a19", **_POL))  # top — keep orange-red
+    p.append(bx(4.8,1.65,3.0, 0, 0.825, 0, C_BODY, **_BRS))
+    p.append(bx(4.8,0.16, 3.0, 0, 1.73,  0, C_CMP_TOP, **_POL))  # top
 
     # ── 3 polishing platens ──────────────────────────────────────
     # Glass enclosure: GX=±2.22, GZF=+0.30, GZB=-1.10, GZC=-0.40
     # Platen radii reduced to stay well inside glass faces
     for px in [-1.4, 0.0, 1.4]:
-        p.append(cy(0.58,0.14, px, 1.81,-0.4, "#6d2813", segs=32, **_POL))   # platen disk (was 0.65)
-        p.append(cy(0.53,0.06, px, 1.87,-0.4, "#8d3b14", segs=32, **_PAD))   # polishing pad (was 0.60)
-        # Conditioning arm + disk (arm shortened; disk radius reduced to clear side glass)
-        p.append(bx(0.72,0.05,0.08, px+0.24, 1.93,-0.4, "#a04000", **_POL))
-        p.append(cy(0.11,0.06, px+0.60, 1.93,-0.4, "#7b3500", segs=16, **_POL))  # was r=0.14 at x+0.68
+        p.append(cy(0.58,0.14, px, 1.81,-0.4, C_CMP_PLATEN, segs=32, **_POL))   # platen disk
+        p.append(cy(0.53,0.06, px, 1.87,-0.4, C_CMP_PAD, segs=32, **_PAD))      # polishing pad
+        # Conditioning arm + disk
+        p.append(bx(0.72,0.05,0.08, px+0.24, 1.93,-0.4, C_CMP_PRI, **_POL))
+        p.append(cy(0.11,0.06, px+0.60, 1.93,-0.4, C_CMP_DARK, segs=16, **_POL))
         # Slurry nozzle arm
-        p.append(bx(0.50,0.04,0.04, px-0.15, 1.95,-0.05, "#bf4500", **_BRS))
-        p.append(cy(0.03,0.12, px-0.38, 1.90, 0,  "#d4500c", segs=8, axis="z", **_BRS))
+        p.append(bx(0.50,0.04,0.04, px-0.15, 1.95,-0.05, C_CMP_NOZZLE, **_BRS))
+        p.append(cy(0.03,0.12, px-0.38, 1.90, 0,  C_CMP_NZTIP, segs=8, axis="z", **_BRS))
 
     # ── Polish head carousel ─────────────────────────────────────
-    # Carousel disk radius reduced from 0.70→0.62: was exactly at GZF/GZB glass faces
-    p.append(cy(0.10,0.90, 0, 2.25,-0.4, "#a04000", segs=8, **_BRS))
-    p.append(cy(0.62,0.08, 0, 2.70,-0.4, "#7b3500", segs=24, **_POL))
+    p.append(cy(0.10,0.90, 0, 2.25,-0.4, C_CMP_PRI, segs=8, **_BRS))
+    p.append(cy(0.62,0.08, 0, 2.70,-0.4, C_CMP_DARK, segs=24, **_POL))
 
     # ── Slurry delivery system ───────────────────────────────────
-    p.append(bx(0.85,1.3,0.7,  -2.7, 0.65, 0.7, "#fafbfd", **_BRS))
+    p.append(bx(0.85,1.3,0.7,  -2.7, 0.65, 0.7, C_BODY, **_BRS))
     for i in range(3):
-        p.append(cy(0.14,0.65, -2.7+i*0.38-0.38, 1.60, 0.7, "#a04000", segs=12, **_BRS))
+        p.append(cy(0.14,0.65, -2.7+i*0.38-0.38, 1.60, 0.7, C_CMP_PRI, segs=12, **_BRS))
 
     # ── Wafer cleaning module ────────────────────────────────────
-    p.append(bx(2.2,1.55,3.0,  3.0, 0.775, 0, "#fafbfd", **_BRS))
-    p.append(bx(2.2,0.15, 3.0,  3.0, 1.625, 0, "#bf360c", **_POL))  # top — keep orange-red
+    p.append(bx(2.2,1.55,3.0,  3.0, 0.775, 0, C_BODY, **_BRS))
+    p.append(bx(2.2,0.15, 3.0,  3.0, 1.625, 0, C_CMP_TOP2, **_POL))  # top
     for bz in [-1.0, 1.0]:
-        p.append(bx(0.65,1.3,0.65, 3.5, 0.75, bz, "#fafbfd", **_BRS))
-        p.append(cy(0.20,0.80, 3.5, 1.40, bz,     "#a04000", segs=12, **_BRS))
+        p.append(bx(0.65,1.3,0.65, 3.5, 0.75, bz, C_BODY, **_BRS))
+        p.append(cy(0.20,0.80, 3.5, 1.40, bz,     C_CMP_PRI, segs=12, **_BRS))
 
     # ── Load station ─────────────────────────────────────────────
-    p.append(bx(1.1,1.6,1.4, -2.7, 0.80,-0.75, "#fafbfd", **_BRS))
-    # Load station left wall face at x=-3.25; FD=0.26, door offset=0.135 → FOUP centre px=-3.385
-    # LP z positions: fz+0.75 ∈ {-0.45, 0.45}
+    p.append(bx(1.1,1.6,1.4, -2.7, 0.80,-0.75, C_BODY, **_BRS))
+    # FOUP load ports ×2
     for fz in [-1.2, -0.3]:
-        p.append(bx(0.015, 0.44, 0.44, -3.257, 1.28, fz+0.75, "#2d3748", mt=0.70, ro=0.30))  # LP port frame on wall
-        p.append(bx(0.13, 1.02, 0.44, -3.385, 0.51, fz+0.75, "#dde4ec", mt=0.58, ro=0.40))   # vertical column
-        p.append(bx(0.46, 0.08, 0.46, -3.385, 1.05, fz+0.75, "#c8d8e8", mt=0.62, ro=0.28))   # table top slab
-        p.append(cy(0.030, 0.04, -3.445, 0.86, fz+0.75, "#22c55e", segs=8, axis="z", **_LED)) # status LED
-        p += _foup(-3.385, 1.28, fz+0.75, +1, 0.38)  # FOUP door flush with load station wall
+        p += _load_port(-3.385, fz+0.75, +1, col_w=0.13, table_w=0.46)
 
     # ── Control touchscreen ──────────────────────────────────────
-    p.append(bx(0.06, 0.06, 0.42, 3.0, 1.62, 1.71, "#5a1505", **_BRS))   # arm
-    p.append(bx(0.04, 1.2, 0.85, 3.000, 1.40, 1.90,  "#3d1505", ry=-0.39, **_ANO))  # frame
-    p.append(bx(0.03, 0.95,0.70, 3.032, 1.40, 1.913, "#1565c0", ry=-0.39, **_SCR))  # screen
+    p.append(bx(0.06, 0.06, 0.42, 3.0, 1.62, 1.71, C_CMP_ARM, **_BRS))   # arm
+    p.append(bx(0.04, 1.2, 0.85, 3.000, 1.40, 1.90,  C_CMP_FRAME, ry=-0.39, **_ANO))  # frame
+    p.append(bx(0.03, 0.95,0.70, 3.032, 1.40, 1.913, C_SCREEN, ry=-0.39, **_SCR))  # screen
 
     # ── Polishing-area glass enclosure ───────────────────────────
     GY0 = 1.82; GH  = 1.23; GYC = GY0 + GH/2
@@ -460,22 +546,18 @@ def make_cmp():
     # Aluminium corner posts & horizontal rails
     for cx in (-GX, GX):
         for cz in (GZF, GZB):
-            p.append(bx(0.04, GH, 0.04, cx, GYC, cz, "#78909c", **_POL))
-    p.append(bx(GW, 0.04, 0.04,  0, GY0+GH, GZF, "#78909c", **_POL))
-    p.append(bx(GW, 0.04, 0.04,  0, GY0+GH, GZB, "#78909c", **_POL))
-    p.append(bx(0.04, 0.04, GD, -GX, GY0+GH, GZC, "#78909c", **_POL))
-    p.append(bx(0.04, 0.04, GD,  GX, GY0+GH, GZC, "#78909c", **_POL))
-    p.append(bx(GW, 0.04, 0.04,  0, GY0, GZF, "#78909c", **_POL))
-    p.append(bx(GW, 0.04, 0.04,  0, GY0, GZB, "#78909c", **_POL))
-    p.append(bx(0.04, 0.04, GD, -GX, GY0, GZC, "#78909c", **_POL))
-    p.append(bx(0.04, 0.04, GD,  GX, GY0, GZC, "#78909c", **_POL))
+            p.append(bx(0.04, GH, 0.04, cx, GYC, cz, C_STEEL_LT, **_POL))
+    p.append(bx(GW, 0.04, 0.04,  0, GY0+GH, GZF, C_STEEL_LT, **_POL))
+    p.append(bx(GW, 0.04, 0.04,  0, GY0+GH, GZB, C_STEEL_LT, **_POL))
+    p.append(bx(0.04, 0.04, GD, -GX, GY0+GH, GZC, C_STEEL_LT, **_POL))
+    p.append(bx(0.04, 0.04, GD,  GX, GY0+GH, GZC, C_STEEL_LT, **_POL))
+    p.append(bx(GW, 0.04, 0.04,  0, GY0, GZF, C_STEEL_LT, **_POL))
+    p.append(bx(GW, 0.04, 0.04,  0, GY0, GZB, C_STEEL_LT, **_POL))
+    p.append(bx(0.04, 0.04, GD, -GX, GY0, GZC, C_STEEL_LT, **_POL))
+    p.append(bx(0.04, 0.04, GD,  GX, GY0, GZC, C_STEEL_LT, **_POL))
 
     # ── Signal tower ─────────────────────────────────────────────
-    # top=red(2.95), mid=yellow(2.80), bottom=green(2.65); lamps dark for dynamic override
-    p.append(cy(0.05,0.90, 3.0, 2.40, 1.2, "#d0d4d8", segs=8, **_BRS))
-    p.append(cy(0.08,0.12, 3.0, 2.65, 1.2, "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.08,0.12, 3.0, 2.80, 1.2, "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.08,0.12, 3.0, 2.95, 1.2, "#1a1a1a", segs=8, **_LED))
+    p += _signal_tower(3.0, 1.2, 2.40, 0.90, 2.65)
 
     return build_scene(p)
 
@@ -488,53 +570,45 @@ def make_etch():
     p = []
 
     # ── Central transfer module ───────────────────────────────────
-    p.append(bx(1.5,1.60,1.5, 0, 0.80, 0, "#fafbfd", **_BRS))
-    p.append(bx(1.6,0.20,1.6, 0, 1.70, 0, "#991b1b", **_POL))  # top — keep red
+    p.append(bx(1.5,1.60,1.5, 0, 0.80, 0, C_BODY, **_BRS))
+    p.append(bx(1.6,0.20,1.6, 0, 1.70, 0, C_ETCH_PRI, **_POL))  # top
 
     # ── 4 etch chambers ──────────────────────────────────────────
     for px, pz in [(1.7,0.65),(1.7,-0.65),(-1.7,0.65),(-1.7,-0.65)]:
-        p.append(bx(1.1,1.55,1.1, px, 0.775, pz, "#fafbfd", **_BRS))
-        p.append(bx(1.2,0.18,1.2, px, 1.640, pz, "#7f1d1d", **_POL))  # top — keep red
-        p.append(cy(0.50,0.40, px, 1.82, pz,     "#5a1010", segs=20, **_POL))  # ICP dome — keep red
+        p.append(bx(1.1,1.55,1.1, px, 0.775, pz, C_BODY, **_BRS))
+        p.append(bx(1.2,0.18,1.2, px, 1.640, pz, C_ETCH_DARK, **_POL))  # top
+        p.append(cy(0.50,0.40, px, 1.82, pz,     C_ETCH_DEEP, segs=20, **_POL))  # ICP dome
         # RF matching network
         side = 0.85 if px > 0 else -0.85
-        p.append(bx(0.50,0.42,0.50, px+side, 0.55, pz, "#fafbfd", **_BRS))
+        p.append(bx(0.50,0.42,0.50, px+side, 0.55, pz, C_BODY, **_BRS))
         # RF cable
-        p.append(cy(0.04,0.40, px+(side*0.7), 0.50, pz, "#6b1515", segs=8, axis="x" if px>0 else "x", **_BRS))
+        p.append(cy(0.04,0.40, px+(side*0.7), 0.50, pz, C_ETCH_CABLE, segs=8, axis="x" if px>0 else "x", **_BRS))
         # Turbo pump
         vz = pz + (0.75 if pz > 0 else -0.75)
-        p.append(cy(0.20,0.80, px, 0.35, vz,     "#7f1d1d", segs=12, **_BRS))
+        p.append(cy(0.20,0.80, px, 0.35, vz,     C_ETCH_DARK, segs=12, **_BRS))
         # Viewport
         vp_side = 0.57 if px > 0 else -0.57
-        p.append(cy(0.07,0.05, px+vp_side, 0.90, pz, "#fca5a5", segs=12, axis="x", **_VPT))
+        p.append(cy(0.07,0.05, px+vp_side, 0.90, pz, C_ETCH_VP, segs=12, axis="x", **_VPT))
         # Gate valve
-        p.append(bx(0.22,0.30,0.22, px*0.6, 0.80, pz*0.6, "#7f1d1d", **_BRS))
+        p.append(bx(0.22,0.30,0.22, px*0.6, 0.80, pz*0.6, C_ETCH_DARK, **_BRS))
 
     # ── EFEM ─────────────────────────────────────────────────────
-    p.append(bx(1.5,2.0,2.8, 1.7, 1.0, 0, "#fafbfd", **_BRS))
-    p.append(bx(1.6,0.16,2.8,1.7, 2.08,0, "#7f1d1d", **_POL))  # top — keep red
-    # EFEM wall face at x=2.45; FD=0.26, door offset=0.135 → FOUP centre px=2.585
+    p.append(bx(1.5,2.0,2.8, 1.7, 1.0, 0, C_BODY, **_BRS))
+    p.append(bx(1.6,0.16,2.8,1.7, 2.08,0, C_ETCH_DARK, **_POL))  # top
+    # FOUP load ports ×2
     for z_lp in [-1.0, 1.0]:
-        p.append(bx(0.015, 0.44, 0.44, 2.457, 1.28, z_lp, "#2d3748", mt=0.70, ro=0.30))  # LP port frame on EFEM wall
-        p.append(bx(0.13, 1.02, 0.44, 2.585, 0.51, z_lp, "#dde4ec", mt=0.58, ro=0.40))   # vertical column
-        p.append(bx(0.50, 0.08, 0.46, 2.585, 1.05, z_lp, "#c8d8e8", mt=0.62, ro=0.28))   # table top slab
-        p.append(cy(0.030, 0.04, 2.645, 0.86, z_lp, "#22c55e", segs=8, axis="z", **_LED)) # status LED
-        p += _foup(2.585, 1.28, z_lp, -1, 0.38)  # FOUP door flush with EFEM wall
+        p += _load_port(2.585, z_lp, -1)
 
     # ── Gas delivery cabinet ─────────────────────────────────────
-    p.append(bx(0.9,2.2,1.3, -2.3, 1.1, 0, "#fafbfd", **_BRS))
+    p.append(bx(0.9,2.2,1.3, -2.3, 1.1, 0, C_BODY, **_BRS))
     for i in range(4):
-        p.append(cy(0.03,1.0, -1.9, 1.3+i*0.14, -0.05, "#991b1b", segs=8, axis="z", **_BRS))
+        p.append(cy(0.03,1.0, -1.9, 1.3+i*0.14, -0.05, C_ETCH_PRI, segs=8, axis="z", **_BRS))
 
     # ── Dry pump ─────────────────────────────────────────────────
-    p.append(bx(0.8,1.0,1.4, -2.3, 0.5, -1.1, "#fafbfd", **_BRS))
+    p.append(bx(0.8,1.0,1.4, -2.3, 0.5, -1.1, C_BODY, **_BRS))
 
     # ── Signal tower ─────────────────────────────────────────────
-    # top=red(3.03), mid=yellow(2.88), bottom=green(2.73); lamps dark for dynamic override
-    p.append(cy(0.05,0.60, 0.8, 2.35, 0.5, "#d0d4d8", segs=8, **_BRS))
-    p.append(cy(0.08,0.12, 0.8, 2.73, 0.5, "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.08,0.12, 0.8, 2.88, 0.5, "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.08,0.12, 0.8, 3.03, 0.5, "#1a1a1a", segs=8, **_LED))
+    p += _signal_tower(0.8, 0.5, 2.35, 0.60, 2.73)
 
     return build_scene(p)
 
@@ -547,53 +621,50 @@ def make_sem():
     p = []
 
     # ── Main body ────────────────────────────────────────────────
-    p.append(bx(1.5,1.85,1.5, 0, 0.925, 0, "#fafbfd", **_BRS))
-    p.append(bx(1.5,0.15,1.5, 0, 1.900, 0, "#6a1fc2", **_POL))  # top — keep purple
+    p.append(bx(1.5,1.85,1.5, 0, 0.925, 0, C_BODY, **_BRS))
+    p.append(bx(1.5,0.15,1.5, 0, 1.900, 0, C_SEM_PRI, **_POL))  # top
     # Anti-vibration isolators
     for ix, iz in [(-0.5,-0.5),(0.5,-0.5),(0.5,0.5),(-0.5,0.5)]:
-        p.append(cy(0.09,0.10, ix, 0.05, iz, "#6a1fc2", segs=8, **_POL))
+        p.append(cy(0.09,0.10, ix, 0.05, iz, C_SEM_PRI, segs=8, **_POL))
 
     # ── Electron optical column ───────────────────────────────────
-    p.append(cy(0.28,1.30, -0.2, 2.55,-0.15, "#fafbfd", segs=20, **_BRS))
-    p.append(cy(0.18,0.42, -0.2, 3.41,-0.15, "#fafbfd", segs=20, **_BRS))  # gun housing
-    p.append(cy(0.12,0.38, -0.2, 3.84,-0.15, "#381371", segs=16, **_POL))  # electron gun
-    p.append(cy(0.06,0.10, -0.2, 4.05,-0.15, "#1e0840", segs=8,  **_POL))  # tip
+    p.append(cy(0.28,1.30, -0.2, 2.55,-0.15, C_BODY, segs=20, **_BRS))
+    p.append(cy(0.18,0.42, -0.2, 3.41,-0.15, C_BODY, segs=20, **_BRS))  # gun housing
+    p.append(cy(0.12,0.38, -0.2, 3.84,-0.15, C_SEM_GUN, segs=16, **_POL))  # electron gun
+    p.append(cy(0.06,0.10, -0.2, 4.05,-0.15, C_SEM_DEEP, segs=8,  **_POL))  # tip
     # Detector
-    p.append(bx(0.22,0.22,0.30, 0.12, 2.40,  0,    "#fafbfd", **_BRS))
+    p.append(bx(0.22,0.22,0.30, 0.12, 2.40,  0,    C_BODY, **_BRS))
     # Aperture disc
-    p.append(cy(0.06,0.04, -0.2, 2.15,-0.15, "#8b5cf6", segs=16, **_POL))
+    p.append(cy(0.06,0.04, -0.2, 2.15,-0.15, C_SEM_LIGHT, segs=16, **_POL))
 
     # ── Sample chamber ────────────────────────────────────────────
-    p.append(bx(0.85,0.55,0.85, -0.2, 1.52,-0.15, "#fafbfd", **_BRS))
-    p.append(bx(0.02,0.45,0.75,  0.22,1.52,-0.15, "#d0d4d8", **_BRS))   # door
+    p.append(bx(0.85,0.55,0.85, -0.2, 1.52,-0.15, C_BODY, **_BRS))
+    p.append(bx(0.02,0.45,0.75,  0.22,1.52,-0.15, C_TRIM, **_BRS))   # door
     # Air lock
-    p.append(bx(0.30,0.30,0.30,  0.62,1.60,-0.15, "#fafbfd", **_BRS))
-    p.append(cy(0.09,0.06, 0.77, 1.60,-0.15,       "#1e0840", segs=12, axis="x", **_POL))
+    p.append(bx(0.30,0.30,0.30,  0.62,1.60,-0.15, C_BODY, **_BRS))
+    p.append(cy(0.09,0.06, 0.77, 1.60,-0.15,       C_SEM_DEEP, segs=12, axis="x", **_POL))
 
     # ── Workstation desk ─────────────────────────────────────────
-    p.append(bx(0.88,1.05,1.65, 1.10, 0.525, 0, "#fafbfd", **_BRS))
-    p.append(bx(0.88,0.06,1.65, 1.10, 1.080, 0, "#4a148c", **_POL))  # top — keep purple
+    p.append(bx(0.88,1.05,1.65, 1.10, 0.525, 0, C_BODY, **_BRS))
+    p.append(bx(0.88,0.06,1.65, 1.10, 1.080, 0, C_SEM_DARK, **_POL))  # top
     # Monitor arm + screen
-    p.append(bx(0.32,0.05,0.05, 1.18, 1.35, 0, "#d0d4d8", **_BRS))
-    p.append(bx(0.05,0.50,0.82, 1.35, 1.36, 0, "#1e1b4b", **_ANO))
-    p.append(bx(0.03,0.42,0.72, 1.37, 1.36, 0, "#312e81", **_SCR))
+    p.append(bx(0.32,0.05,0.05, 1.18, 1.35, 0, C_TRIM, **_BRS))
+    p.append(bx(0.05,0.50,0.82, 1.35, 1.36, 0, C_SEM_FRAME, **_ANO))
+    p.append(bx(0.03,0.42,0.72, 1.37, 1.36, 0, C_SEM_SCREEN, **_SCR))
     # Keyboard
-    p.append(bx(0.02,0.05,0.55, 1.10, 1.14, 0.06, "#1e1b4b", rx=0.18, **_SCR))
+    p.append(bx(0.02,0.05,0.55, 1.10, 1.14, 0.06, C_SEM_FRAME, rx=0.18, **_SCR))
 
     # ── Vacuum rack ───────────────────────────────────────────────
-    p.append(bx(0.45,0.95,0.55, -1.1, 0.475, 0.55, "#fafbfd", **_BRS))
+    p.append(bx(0.45,0.95,0.55, -1.1, 0.475, 0.55, C_BODY, **_BRS))
     for i in range(3):
-        p.append(bx(0.38,0.16,0.05, -1.1, 0.20+i*0.30, 0.8, "#1565c0", **_SCR))
+        p.append(bx(0.38,0.16,0.05, -1.1, 0.20+i*0.30, 0.8, C_SCREEN, **_SCR))
 
     # ── Turbo pump ────────────────────────────────────────────────
-    p.append(cy(0.20,0.60, -1.1, 0.30,-0.45, "#4a148c", segs=12, **_BRS))
+    p.append(cy(0.20,0.60, -1.1, 0.30,-0.45, C_SEM_DARK, segs=12, **_BRS))
 
     # ── Signal tower ─────────────────────────────────────────────
-    # top=red(2.99), mid=yellow(2.84), bottom=green(2.69); lamps dark for dynamic override
-    p.append(cy(0.04,0.70, -0.5, 2.60, 0.58, "#d0d4d8", segs=8, **_BRS))
-    p.append(cy(0.07,0.10, -0.5, 2.69, 0.58, "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.07,0.10, -0.5, 2.84, 0.58, "#1a1a1a", segs=8, **_LED))
-    p.append(cy(0.07,0.10, -0.5, 2.99, 0.58, "#1a1a1a", segs=8, **_LED))
+    p += _signal_tower(-0.5, 0.58, 2.60, 0.70, 2.69,
+                       pole_r=0.04, lamp_r=0.07, lamp_h=0.10)
 
     return build_scene(p)
 
