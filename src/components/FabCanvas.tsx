@@ -560,8 +560,7 @@ export const FabCanvas = forwardRef<FabCanvasHandle, FabCanvasProps>(
       // ── Environment map (for metallic PBR reflections) ───────────────────
       const pmrem = new THREE.PMREMGenerator(renderer);
       const envScene = new THREE.Scene();
-      // envScene.add(new THREE.AmbientLight(0xd8eeff, 2.0));
-      envScene.add(new THREE.AmbientLight(0xf0f0f0, 2.0));
+      envScene.add(new THREE.AmbientLight(0xd8eeff, 2.0));
       const envDir = new THREE.DirectionalLight(0xffffff, 1.5);
       envDir.position.set(1, 3, 2);
       envScene.add(envDir);
@@ -571,8 +570,8 @@ export const FabCanvas = forwardRef<FabCanvasHandle, FabCanvasProps>(
 
       // ── Cleanroom lighting ─────────────────────────────────────────────────
       // Ambient fill — subtle cool white; kept low so directional shadows read clearly
+      scene.add(new THREE.AmbientLight(0xd8e4f0, 1.6));
       // scene.add(new THREE.AmbientLight(0xd8e4f0, 0.6));
-      scene.add(new THREE.AmbientLight(0xf0f0f0, 0.6));
 
       // Directional key light — angled for clear shadow definition
       const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
